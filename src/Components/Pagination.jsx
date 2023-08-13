@@ -1,5 +1,6 @@
-import React from "react";
+import React, { memo } from "react";
 function BasicPagination(props) {
+  console.log("buttons");
   return (
     <div>
       {props.questionOrder.map((val, index) => (
@@ -14,4 +15,4 @@ function BasicPagination(props) {
     </div>
   );
 }
-export default BasicPagination;
+export default memo(BasicPagination);

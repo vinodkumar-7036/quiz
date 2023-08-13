@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import "./Quiz.css";
 import Radio from "@mui/material/Radio";
@@ -12,6 +12,7 @@ import { scoreContext } from "../App";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { increment } from "../Features/scoreSlice";
+import Dummy from "./Dummy";
 
 const Quiz = () => {
   const [questions, setQuestions] = useState([]);
@@ -42,9 +43,30 @@ const Quiz = () => {
     { number: 19, visited: false },
     { number: 20, visited: false },
   ]);
+
   // const { score, setScore } = useContext(scoreContext);
   const dispatch = useDispatch();
   const score = useSelector((state) => state.score.value);
+  const changeQuestion = useCallback(
+    (val) => {
+      setTimeout(() => {
+        setErrorMessage(false);
+        setDisplayAnswer("");
+        console.log("qo", questionOrder);
+        setCurrentQuestion(val - 1);
+        setOptions([
+          ...questions[val - 1].incorrect_answers,
+          questions[val - 1].correct_answer,
+        ]);
+      }, 5000);
+    },
+    [questions]
+  );
+
+  // const displayDummy = useCallback(() => {
+  //   const val = currentQuestion;
+  //   console.log("Current question is :", val);
+  // }, [currentQuestion]);
 
   useEffect(() => {
     console.log("Im in useEffect!!");
@@ -118,22 +140,14 @@ const Quiz = () => {
   if (questions.length === 0) {
     return <div>Loading...</div>;
   }
-  const changeQuestion = (val) => {
-    setErrorMessage(false);
-    setDisplayAnswer("");
 
-    setCurrentQuestion(val - 1);
-    setOptions([
-      ...questions[val - 1].incorrect_answers,
-      questions[val - 1].correct_answer,
-    ]);
-  };
   const onSubmit = () => {
     setScoreMessage(`Score is ${score}`);
   };
 
   return (
     <div className="quiz-container">
+      <Dummy currentQuestion={currentQuestion} />
       <>
         <div className="question-section">
           <div className="question-count">
